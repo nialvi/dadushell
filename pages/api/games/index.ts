@@ -18,7 +18,7 @@ export default async (req, res) => {
       "Client-ID": clientID,
       Authorization: `Bearer ${data.access_token}`,
     },
-    data: `fields name, websites; limit 30;`,
+    data: `fields name, websites; limit 15;`,
   });
 
   res.statusCode = 200;
