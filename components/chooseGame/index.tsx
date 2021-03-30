@@ -1,7 +1,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 
-const ChooseGame = () => {
+interface IProps {
+  onChoose: ({ name: string }) => void;
+}
+
+const ChooseGame = ({ onChoose }: IProps) => {
   const [isShowList, setShowList] = useState(false);
   const [list, setList] = useState([]);
 
@@ -28,7 +32,17 @@ const ChooseGame = () => {
       {isShowList && (
         <ul>
           {list.map((game) => {
-            return <li key={game.name}>{game.name}</li>;
+            return (
+              <li
+                onClick={() => {
+                  onChoose({ name: game.name });
+                  onClick();
+                }}
+                key={game.name}
+              >
+                {game.name}
+              </li>
+            );
           })}
         </ul>
       )}

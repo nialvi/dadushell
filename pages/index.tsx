@@ -1,8 +1,15 @@
 import Head from "next/head";
 import ChooseGame from "../components/chooseGame";
+import Board from "../components/board";
 import styles from "../styles/Home.module.css";
 
+import store from "./index/model";
+
 export default function Home() {
+  const chooseGame = (game) => {
+    store.addGameNextList(game);
+  };
+
   return (
     <div className={styles.container}>
       <Head>
@@ -13,7 +20,9 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Choose a game</h1>
 
-        <ChooseGame />
+        <ChooseGame onChoose={chooseGame} />
+
+        <Board lists={store.lists} />
       </main>
 
       <footer className={styles.footer}>
