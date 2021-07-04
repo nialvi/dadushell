@@ -1,72 +1,29 @@
+import express from "express";
+import { ApolloServer } from "apollo-server-express";
 import { PrismaClient } from "@prisma/client";
+import schema from "./schema";
 
 const prisma = new PrismaClient();
 
-async function main() {
-  await prisma.user.create({
-    data: {
-      name: "Pikachu",
-      email: "pikachu@gmail.com",
-      password: "secret",
-      boards: {
-        create: { name: "Games" },
-      },
-    },
+const main = async () => {
+  const app = express();
+
+  const apolloServer = new ApolloServer({
+    schema,
+    context: () => ({ prisma }),
   });
 
-  await prisma.list.create({
-    data: {
-      name: "inprogress",
-      order: 1,
-      boardId: 1,
-      card: {
-        create: {
-          name: "DOTA",
-          genre: "moba",
-          platform: "PC",
-          releaseDate: new Date(2013, 6, 9),
-        },
-      },
-    },
+  apolloServer.applyMiddleware({ app });
+
+  app.get("/", (_, res) => {
+    res.send("hello world!");
   });
 
-  await prisma.list.create({
-    data: {
-      name: "done",
-      order: 1,
-      boardId: 1,
-      card: {
-        create: {
-          name: "Half Life",
-          genre: "FPS",
-          platform: "PC",
-          releaseDate: new Date(1998, 10, 19),
-        },
-      },
-    },
-  });
+  const port = process.env.PORT || 4000;
 
-  await prisma.list.create({
-    data: {
-      name: "abandoned",
-      order: 1,
-      boardId: 1,
-      card: {
-        create: {
-          name: "Apex Legends",
-          genre: "FPS",
-          platform: "PC",
-          releaseDate: new Date(2019, 1, 4),
-        },
-      },
-    },
+  app.listen(port, () => {
+    console.log(`server is running http://localhost:${port}`);
   });
-}
+};
 
-main()
-  .catch((e) => {
-    throw e;
-  })
-  .finally(async () => {
-    prisma.$disconnect();
-  });
+main().catch((e) => console.log(e));
