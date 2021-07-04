@@ -27,4 +27,30 @@ model Board {
   name String
   userId Int
   user User @relation(fields: [userId], references: [id])
+  lists List[]
+}
+
+model List {
+  id Int @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  order Int
+  boardId Int
+  board Board @relation(fields: [boardId], references: [id])
+  card Card[]
+}
+
+model Card {
+  id Int @default(autoincrement()) @id
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name String
+  description String?
+  genre String?
+  platform String?
+  comment String?
+  releaseDate DateTime
+  listId Int
+  list List @relation(fields: [listId], references: [id])
 }
